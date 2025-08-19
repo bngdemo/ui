@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARIA - AI Response Interactive Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo {
+            font-size: 2.8em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .phone-input {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: white;
+            color: #333;
+        }
+
+        .phone-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .phone-input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.2em;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+        }
+
+        .cta-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .cta-button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .cta-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            background: #ccc;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 25px;
+            font-size: 1.1em;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .success-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: #ff4444;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        .disclaimer {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 25px;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .logo {
+                font-size: 2.2em;
+            }
+            
+            .phone-input {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">ARIA</div>
+        <div class="subtitle">AI Response Interactive Assistant</div>
+        
+        <!-- Phone Number Input -->
+        <div class="form-group">
+            <label for="phoneNumber">Phone Number (with country code)</label>
+            <input 
+                type="tel" 
+                id="phoneNumber" 
+                class="phone-input" 
+                placeholder="+1 (555) 123-4567"
+            >
+        </div>
+
+        <!-- CTA Button -->
+        <button class="cta-button" id="demoButton" onclick="initiateCall()">
+            Get Demo Call
+        </button>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage" style="display: none;"></div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            🎉 Demo call initiated successfully! You should receive a call shortly.
+        </div>
+
+        <div class="disclaimer">
+            Enter your phone number with country code<br>
+            (e.g., +1 for US, +44 for UK, +91 for India)
+        </div>
+    </div>
+
+    <script>
+        function validatePhoneNumber(phone) {
+            const phoneRegex = /^\+[1-9]\d{1,14}$/;
+            return phoneRegex.test(phone);
+        }
+
+        function formatPhoneNumber(value) {
+            let cleaned = value.replace(/\D/g, '');
+            if (cleaned && !value.startsWith('+')) {
+                return '+' + cleaned;
+            }
+            return value;
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+
+        async function initiateCall() {
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const button = document.getElementById('demoButton');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Hide previous messages
+            successMessage.classList.remove('show');
+            errorMessage.style.display = 'none';
+
+            // Validation
+            if (!phoneNumber) {
+                showError('Please enter your phone number');
+                return;
+            }
+
+            if (!validatePhoneNumber(phoneNumber)) {
+                showError('Please enter a valid phone number with country code (e.g., +1234567890)');
+                return;
+            }
+
+            // Show loading state
+            button.innerHTML = '<span class="loading-spinner"></span>Initiating Call...';
+            button.disabled = true;
+
+            try {
+                // Call your secure backend API endpoint
+                const response = await fetch('/api/initiate-call', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phoneNumber: phoneNumber
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Success
+                    successMessage.classList.add('show');
+                    button.innerHTML = 'Call Initiated ✓';
+                    document.getElementById('phoneNumber').value = '';
+                    
+                    // Reset button after 5 seconds
+                    setTimeout(() => {
+                        button.innerHTML = 'Get Demo Call';
+                        button.disabled = false;
+                        successMessage.classList.remove('show');
+                    }, 5000);
+                } else {
+                    const msg = data && data.message ? data.message : 'Failed to initiate call';
+                    throw new Error(msg);
+                }
+            } catch (error) {
+                console.error('Error initiating call:', error);
+                showError(error.message || 'Failed to initiate call. Please try again.');
+                button.innerHTML = 'Get Demo Call';
+                button.disabled = false;
+            }
+        }
+
+        // Format phone number as user types
+        document.getElementById('phoneNumber').addEventListener('input', function(e) {
+            const formatted = formatPhoneNumber(e.target.value);
+            e.target.value = formatted;
+        });
+
+        // Enter key support
+        document.getElementById('phoneNumber').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                initiateCall();
+            }
+        });
+    </script>
+</body>
+</html>

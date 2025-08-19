@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "pages/api/**/*.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/pages/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "VAPI_PRIVATE_KEY": "@vapi_private_key",
+    "VAPI_ASSISTANT_ID": "@vapi_assistant_id", 
+    "VAPI_PHONE_NUMBER_ID": "@vapi_phone_number_id"
+  }
+}
