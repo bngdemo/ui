@@ -20,9 +20,5 @@
       "dest": "/index.html"
     }
   ],
-  "env": {
-    "VAPI_PRIVATE_KEY": "@vapi_private_key",
-    "VAPI_ASSISTANT_ID": "@vapi_assistant_id", 
-    "VAPI_PHONE_NUMBER_ID": "@vapi_phone_number_id"
-  }
+  "env": {}
 }
