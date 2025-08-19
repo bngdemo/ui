@@ -3,20 +3,13 @@
   "version": "1.0.0",
   "description": "ARIA AI Response Interactive Assistant Demo Call App",
   "type": "module",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
     "serve": "node server.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "next": "^14.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "express": "^4.19.2"
   },
   "engines": {
     "node": ">=18.0.0"
