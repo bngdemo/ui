@@ -287,7 +287,12 @@
                     })
                 });
 
-                const data = await response.json();
+                let data;
+                try {
+                    data = await response.json();
+                } catch (_) {
+                    throw new Error('Server returned a non-JSON response.');
+                }
 
                 if (response.ok && data.success) {
                     // Success
