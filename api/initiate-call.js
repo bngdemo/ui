@@ -9,12 +9,14 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Only allow POST requests
+  // Health check / simple verification
+  if (req.method === 'GET') {
+    return res.status(200).json({ success: true, message: 'initiate-call endpoint is reachable' });
+  }
+
+  // Only allow POST requests beyond this point
   if (req.method !== 'POST') {
-    return res.status(405).json({ 
-      success: false, 
-      message: 'Method not allowed' 
-    });
+    return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
 
   try {
